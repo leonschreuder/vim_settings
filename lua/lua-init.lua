@@ -112,42 +112,6 @@ local on_attach = function(client, bufnr)
 end
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
--- make sure phpactor is in the path. Eg: PATH="$PATH:$HOME/.vim/bundle/phpactor/bin"
--- :LspInstallInfo
-local servers = {
-    'phpactor',
-    'rust_analyzer',
-    'tsserver',
-    'jdtls',
-    'bashls',
-    'vimls',
-    'marksman',
-    'lua_ls',
-    'basedpyright',
-    'ltex',
-}
--- 'kotlin_language_server', -- Has problems with large projects
-
-for _, lsp in pairs(servers) do
-  require('lspconfig')[lsp].setup {
-    capabilities = capabilities,
-    on_attach = on_attach
-  }
-end
-
--- ServerConfig: ltex
--- Grammar/Spell Checker Using LanguageTool with Support for LATEX,
--- Markdown, and Others
-
-
-require('lspconfig')['ltex'].setup {
-  settings = {
-    ltex = {
-      enabled = false,
-    },
-  },
-}
-
 local ltexLanguages = {
   -- default:
   "bibtex", "context", "context.tex", "html", "latex", "markdown", "org", "restructuredtext", "rsweave",
@@ -155,16 +119,67 @@ local ltexLanguages = {
   "jira",
 }
 
+-- make sure phpactor is in the path. Eg: PATH="$PATH:$HOME/.vim/bundle/phpactor/bin"
+-- :LspInstallInfo
+local servers = {
+    'phpactor',
+    'rust_analyzer',
+    -- 'tsserver',
+    'jdtls',
+    'bashls',
+    'vimls',
+    'marksman',
+    'lua_ls',
+    'basedpyright',
+}
+-- 'ltex', -- added extra below
+-- 'kotlin_language_server', -- Has problems with large projects
+
+for _, lsp in pairs(servers) do
+  vim.lsp.config(lsp, {
+    capabilities = capabilities,
+    on_attach = on_attach
+  })
+end
+
+-- same as above, but special case for ltex
+
+vim.lsp.config('ltex', {
+  capabilities = capabilities,
+  filetypes = {}, -- do not add ltex automatically
+  on_attach = on_attach,
+  settings = {
+    ltex = {
+      enabled = false,
+    },
+  },
+})
+
+
+-- ServerConfig: ltex
+-- Grammar/Spell Checker Using LanguageTool with Support for LATEX,
+-- Markdown, and Others
+
+
+-- vim.lsp.config('ltex', {
+--   settings = {
+--     ltex = {
+--       enabled = false,
+--     },
+--   },
+-- })
+
 vim.api.nvim_create_user_command(
   'LngOn',
   function(opts)
     local providedLanguage = opts.fargs[1]
     if not providedLanguage == nil then
-      print("Enabling LanguageTool with langauge:",providedLanguage)
+      print("Enabling ltex (globally) with langauge:",providedLanguage)
     else
-      print("Enabling LanguageTool with default langauge (en-US)")
+      print("Enabling ltex (globally) with default langauge (en-US)")
     end
-    require('lspconfig')['ltex'].setup {
+
+    vim.lsp.config('ltex', {
       settings = {
         ltex = {
           enabled = ltexLanguages,
@@ -172,7 +187,14 @@ vim.api.nvim_create_user_command(
         },
       },
       filetypes = ltexLanguages,
-    }
+    })
+
+    -- in the setup, ltex is configured to not be autostarted. This enables lsp
+    -- to start reading the filetype
+    vim.lsp.enable('ltex')
+    -- now reload the file so ltex gets started
+    vim.cmd("edit")
+
   end,
   { nargs = '?' }
 )
@@ -180,14 +202,10 @@ vim.api.nvim_create_user_command(
 vim.api.nvim_create_user_command(
   'LngOff',
   function()
-    print("Disabling LanguageTool")
-    require('lspconfig')['ltex'].setup {
-      settings = {
-        ltex = {
-          enabled = false,
-        },
-      },
-    }
+    print("Disabling ltex (globally)")
+
+    -- now disable the language server
+    vim.lsp.enable('ltex', false)
   end,
   {}
 )

@@ -31,6 +31,7 @@ if has("nvim")
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   Plug 'sindrets/diffview.nvim'
+  Plug 'stevearc/oil.nvim'        " like file explorer that lets you edit your filesystem like a normal buffer
 else
   Plug 'altercation/vim-colors-solarized'
 endif
@@ -59,6 +60,9 @@ Plug 'stevearc/aerial.nvim'               " code outline window using lsp
 Plug 'ThePrimeagen/harpoon', { 'branch': 'harpoon2' }               " Saving favorite files in a separate menu
 Plug 'pechorin/any-jump.vim'              " quickly navigate using rg or ag
 
+if has("nvim")
+  Plug 'sotte/presenting.nvim'            " presentations in vim
+endif
 
 
 " LANGUAGE/TYPE SPECIFIC {{{2
@@ -128,6 +132,7 @@ Plug 'lervag/vimtex'                      " for latex
 
 " Plug 'gburca/vim-logcat' " farben nicht hilfreich
 " Plug 'naseer/logcat'  " sehr häßlich
+
 
 " MY PLUGINS {{{2
 Plug 'leonschreuder/vim-chunk', { 'branch': 'dev' }
@@ -565,6 +570,21 @@ source ~/.vim/funcs.vim
 
 " EXPERIMENTAL {{{1
 "===============================================================================
+
+" from https://gist.github.com/tpope/287147
+" autoformats using Tabularize when typing the '|' character in insert mode.
+" You need to run Tabularize once to initialize how it should format
+inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
+function! s:align()
+  let p = '^\s*|\s.*\s|\s*$'
+  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
+    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+    Tabularize/|/l1
+    normal! 0
+    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+  endif
+endfunction
 
 augroup slog
     autocmd!

@@ -79,6 +79,7 @@ Plug 'LucHermitte/lh-vim-lib'
 Plug 'ThePrimeagen/refactoring.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'leonschreuder/proguard.vim'
 
 " -- lanuage client {{{3
 if has("nvim")
@@ -393,20 +394,6 @@ nnoremap <Leader>mx <Plug>MarkClear
 nnoremap <Leader>mr <Plug>MarkRegex
 xnoremap <Leader>mr <Plug>MarkRegex
 
-" -- LanguageTool {{{2
-
-let g:grammarous#jar_url = 'https://www.languagetool.org/download/LanguageTool-5.9.zip'
-
-nnoremap ro <Plug>(grammarous-open-info-window) 	" Open the info window for the error under the cursor
-nnoremap rf <Plug>(grammarous-fixit) 	" Fix the error under the cursor automatically
-nnoremap ]r <Plug>(grammarous-move-to-next-error) 	" Move cursor to the next error
-nnoremap [r <Plug>(grammarous-move-to-previous-error) 	" Move cursor to the previous error
-" <Plug>(grammarous-move-to-info-window) 	" Move the cursor to the info window
-" <Plug>(grammarous-reset) 	" Reset the current check
-" <Plug>(grammarous-fixall) 	" Fix all the errors in a current buffer automatically
-" <Plug>(grammarous-close-info-window) 	" Close the information window from checked buffer
-" <Plug>(grammarous-remove-error) 	" Remove the error under the cursor
-" <Plug>(grammarous-disable-rule) 	" Disable the grammar rule under the cursor
 
 
 " -- vim-maximizer {{{2
@@ -446,13 +433,13 @@ nnoremap <leader>gl :AnyJumpLastResults<CR>
 "===============================================================================
 
 " -- php {{{2
-augroup PhpactorMappings
-  au!
-  au FileType php nnoremap <silent> ,i :PhpactorGotoImplementations<CR>
-  au FileType php nnoremap <silent> ,m :PhpactorContextMenu<CR>
-  au FileType php nnoremap <silent> <C-]> :PhpactorGotoDefinition<CR>
-augroup END
-<
+" augroup PhpactorMappings
+"   au!
+"   au FileType php nnoremap <silent> ,i :PhpactorGotoImplementations<CR>
+"   au FileType php nnoremap <silent> ,m :PhpactorContextMenu<CR>
+"   au FileType php nnoremap <silent> <C-]> :PhpactorGotoDefinition<CR>
+" augroup END
+" <
 
 " -- kotlin {{{2
 autocmd FileType kotlin set tabstop=4

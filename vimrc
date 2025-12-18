@@ -555,6 +555,21 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 source ~/.vim/funcs.vim
 
 
+command! NERDTreeSortTimeToggle call NERDTreeSortTimeToggle()
+
+fu! NERDTreeSortTimeToggle()
+  if !exists('g:NERDTreePrevSortOrder')
+    let g:NERDTreePrevSortOrder = copy(g:NERDTreeSortOrder)
+    let g:NERDTreeSortOrder += ['[[-timestamp]]']
+    call nerdtree#ui_glue#invokeKeyMap("R")
+  else
+    let g:NERDTreeSortOrder = g:NERDTreePrevSortOrder
+    unlet g:NERDTreePrevSortOrder
+    call nerdtree#ui_glue#invokeKeyMap("R")
+  endif
+endfu
+
+
 " EXPERIMENTAL {{{1
 "===============================================================================
 

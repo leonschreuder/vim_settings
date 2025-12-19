@@ -26,7 +26,17 @@ function! NERDTreeStartShell()
         ":lcd to to the selected dir and :shell out
         exec 'lcd ' . n.path.str({'format': 'Cd'})
         redraw!
-        shell
+        if has("nvim")
+          " botright - open the command in the bottom
+          " 30split  - open a split with a hight of 30
+          " startinsert - the following :terminal will be opened in insert mode
+          " terminal - start a new terminal emulator
+          botright 30split +startinsert | terminal
+        else
+          " for vim, this opens a new shubshell, which is weird but it works
+          shell
+        endif
+
 
     "make sure we restore the cwd to its original state
     finally

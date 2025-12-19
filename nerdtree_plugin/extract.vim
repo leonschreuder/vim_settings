@@ -19,7 +19,7 @@ call NERDTreeAddMenuItem({
 function! NERDTreeExtractIsActive()
   let currentNode = g:NERDTreeFileNode.GetSelected()
   let file = currentNode.path.str()
-  if file =~ ".zip\\|.tar"
+  if file =~ ".zip\\|.tar\\|.7z"
     return 1
   else
     return 0
@@ -37,6 +37,12 @@ function! NERDTreeExtractMenuItem()
       call system("unzip " . file . " -d " . parentDir)
     else
       echo "unzip not installed"
+    endif
+  elseif file =~ ".7z"
+    if exepath('7zz') != ""
+      call system("7zz x" . file)
+    else
+      echo "7zz not installed"
     endif
   else
     if exepath('tar') != ""

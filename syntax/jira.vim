@@ -39,10 +39,29 @@ syntax cluster jiraMark contains=jiraMarkOn,jiraMarkOff,jiraMarkCheck,jiraMarkEr
 syntax match jiraItalic /_[^_]\+_/ excludenl contains=ALL
 syntax match jiraBold /\*[^*]\+\*/ excludenl contains=ALL
 
-syntax match    jiraNoFormat          "{noformat}\|{code}" contained
-highlight link  jiraNoFormat          Comment
-syntax region   jiraNoFormatRegion    start="{noformat}\|{code}" end="{noformat}\|{code}" contains=jiraNoFormat
+syntax match jiraTitle /h[0-9]\..*$/
+highlight link  jiraTitle          Error
+
+
+syntax match jiraLinkName /\[[^|]\+|/ contained
+highlight link  jiraLinkName          Function
+
+syntax region   jiraLinkRegion    start="\[" end="\]" contains=jiraLinkLink,jiraLinkName
+highlight link  jiraLinkRegion          Comment
+
+
+syntax match    jiraNoFormatTag       "{noformat}" contained
+highlight link  jiraNoFormatTag       Comment
+syntax region   jiraNoFormatRegion    start="{noformat}" end="{noformat}" keepend contains=jiraNoFormatTag
 highlight link  jiraNoFormatRegion    String
+
+syntax match    jiraCodeTag           "{code:\?[^}]*}" contained
+highlight link  jiraCodeTag           Comment
+syntax region   jiraNoFormatRegion    start="{code:\?[^}]*}" end="{code}" keepend contains=jiraCodeTag
+highlight link  jiraNoFormatRegion    String
+
+syntax match    jiraInlineCodeTag       "{{[^}]\+}}"
+highlight link  jiraInlineCodeTag       String
 
 syntax region jiraPanel start="{panel:" end="{panel}" fold contains=ALL keepend
 syntax region jiraPanelTitle matchgroup=Comment start="{panel:.\{-}\(title=\)" end="|.*}" contained 

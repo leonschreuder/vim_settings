@@ -173,10 +173,10 @@ vim.api.nvim_create_user_command(
   'LngOn',
   function(opts)
     local providedLanguage = opts.fargs[1]
-    if not providedLanguage == nil then
-      print("Enabling ltex (globally) with langauge:",providedLanguage)
-    else
+    if not providedLanguage or providedLanguage == nil then
       print("Enabling ltex (globally) with default langauge (en-US)")
+    else
+      print("Enabling ltex (globally) with langauge:",providedLanguage)
     end
 
     vim.lsp.config('ltex', {

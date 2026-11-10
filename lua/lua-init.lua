@@ -125,12 +125,14 @@ local servers = {
     'phpactor',
     'rust_analyzer',
     -- 'tsserver',
-    'jdtls',
     'bashls',
     'vimls',
     'marksman',
     'lua_ls',
     'basedpyright',
+    'kmp-lsp',
+    'ty',
+    'shuck',
 }
 -- 'ltex', -- added extra below
 -- 'kotlin_language_server', -- Has problems with large projects
@@ -153,6 +155,12 @@ vim.lsp.config('ltex', {
       enabled = false,
     },
   },
+})
+
+vim.lsp.config("shuck", {
+  cmd = { "shuck", "server" },
+  filetypes = { "sh", "bash", "zsh", "ksh" },
+  root_markers = { ".shuck.toml", "shuck.toml", ".git" },
 })
 
 
@@ -231,7 +239,7 @@ local treesitterOk, treesitter = pcall(require, "nvim-treesitter.configs")
 if treesitterOk then
   treesitter.setup({
     -- A list of parser names, or "all" (the listed parsers MUST always be installed)
-    ensure_installed = { "lua", "vim", "vimdoc", "markdown", "markdown_inline", "bash" },
+    ensure_installed = { "lua", "vim", "vimdoc", "markdown", "markdown_inline", "bash", "python" },
 
     -- Install parsers synchronously (only applied to `ensure_installed`)
     -- sync_install = false,

@@ -15,6 +15,7 @@ Plug 'junegunn/vim-plug' " Plugin management using vim-plug installed above, but
 Plug 'sjl/vitality.vim'  " Improvements for tmux (autofocus event + cursor)
 
 Plug 'scrooloose/nerdtree'      " Easy filesystem navigation
+Plug 'PhilRunninger/nerdtree-visual-selection' " copy, move etc in nerdtree
 Plug 'Lokaltog/vim-easymotion'  " Direcly moving the cursor somewhere
 " fzf is a system fuzzy finder. This also installs it.
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -31,7 +32,6 @@ if has("nvim")
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   Plug 'sindrets/diffview.nvim'
-  Plug 'stevearc/oil.nvim'        " like file explorer that lets you edit your filesystem like a normal buffer
 else
   Plug 'altercation/vim-colors-solarized'
 endif
@@ -80,6 +80,9 @@ Plug 'ThePrimeagen/refactoring.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'leonschreuder/proguard.vim'
+
+" -- database {{{3
+Plug 'tpope/vim-dadbod'
 
 " -- lanuage client {{{3
 if has("nvim")
@@ -234,7 +237,6 @@ noremap <leader>l <C-W>l
 " in an effort to reduce strain on my pinky
 noremap ,l :tabnext<CR>
 noremap ,h :tabprevious<CR>
-tnoremap <C-x> <C-\><C-n>
 
 " move up/down/left/right
 noremap <C-j> 3<C-e>

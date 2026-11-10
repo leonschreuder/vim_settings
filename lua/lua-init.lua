@@ -146,7 +146,7 @@ end
 
 -- same as above, but special case for ltex
 
-vim.lsp.config('ltex', {
+vim.lsp.config('ltex_plus', {
   capabilities = capabilities,
   filetypes = {}, -- do not add ltex automatically
   on_attach = on_attach,
@@ -169,14 +169,6 @@ vim.lsp.config("shuck", {
 -- Markdown, and Others
 
 
--- vim.lsp.config('ltex', {
---   settings = {
---     ltex = {
---       enabled = false,
---     },
---   },
--- })
-
 vim.api.nvim_create_user_command(
   'LngOn',
   function(opts)
@@ -187,11 +179,14 @@ vim.api.nvim_create_user_command(
       print("Enabling ltex (globally) with langauge:",providedLanguage)
     end
 
-    vim.lsp.config('ltex', {
+    vim.lsp.config('ltex_plus', {
       settings = {
         ltex = {
           enabled = ltexLanguages,
-          language = providedLanguage,
+          language = providedLanguage or "en-US",
+          additionalRules = {
+            enablePickyRules = true,
+          },
         },
       },
       filetypes = ltexLanguages,
@@ -199,7 +194,8 @@ vim.api.nvim_create_user_command(
 
     -- in the setup, ltex is configured to not be autostarted. This enables lsp
     -- to start reading the filetype
-    vim.lsp.enable('ltex')
+    -- mason-lspconfig may have already started a client with old settings
+    vim.lsp.enable('ltex_plus')
     -- now reload the file so ltex gets started
     vim.cmd("edit")
 
@@ -213,7 +209,7 @@ vim.api.nvim_create_user_command(
     print("Disabling ltex (globally)")
 
     -- now disable the language server
-    vim.lsp.enable('ltex', false)
+    vim.lsp.enable('ltex_plus', false)
   end,
   {}
 )
@@ -225,7 +221,7 @@ vim.api.nvim_create_user_command(
   'LngDetatch',
   function()
     local bufNr = vim.fn.bufnr()
-    for index, client in ipairs(vim.lsp.get_clients({name='ltex'})) do
+    for index, client in ipairs(vim.lsp.get_clients({name='ltex_plus'})) do
       print("Disconnecting Languagetool from bufNr:", bufNr)
       vim.lsp.buf_detach_client(bufNr, client['id'])
     end

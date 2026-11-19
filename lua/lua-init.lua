@@ -335,5 +335,34 @@ end
 
 
 
+-- opencode  {{{2
+-- integration with the opencode AI agent
+
+local snacksOk, snacks = pcall(require, "snacks")
+if snacksOk then
+  snacks.setup({
+    input = { enabled = true },
+    picker = { enabled = true },
+  })
+end
+
+local opencodeOk, opencode = pcall(require, "opencode")
+if opencodeOk then
+  vim.g.opencode_opts = {
+    server = {
+      start = function()
+        vim.cmd("rightbelow vsplit term://opencode --port | wincmd p")
+      end,
+    },
+  }
+
+  -- required for reloading buffers edited by opencode
+  vim.o.autoread = true
+
+  vim.keymap.set({ "n", "x" }, "<leader>oa", function() opencode.ask("@this: ", { submit = true }) end)
+  vim.keymap.set({ "n", "x" }, "<leader>os", function() opencode.select() end)
+  vim.keymap.set({ "n", "x" }, "<leader>op", function() opencode.prompt("@this") end)
+end
+
 -- }}}
 -- vim:fdm=marker

@@ -62,6 +62,8 @@ Plug 'pechorin/any-jump.vim'              " quickly navigate using rg or ag
 
 if has("nvim")
   Plug 'sotte/presenting.nvim'            " presentations in vim
+  Plug 'folke/snacks.nvim'                " dependency for opencode.nvim (input, picker)
+  Plug 'nickjvandyke/opencode.nvim', { 'tag': 'v1.0.2' }      " integration with the opencode AI agent
 endif
 
 
@@ -603,6 +605,8 @@ fu! JiraCreate()
 endfu
 
 command! JiraCreate call JiraCreate()
+
+command! Ai term! bash --init-file <(echo '. $HOME/.bashrc; opencode --port')
 
 augroup filetypedetect
   au BufNewFile,BufRead *.jira			setf jira

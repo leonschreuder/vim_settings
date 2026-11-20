@@ -73,7 +73,6 @@ endif
 Plug 'tpope/vim-commentary'             " Comment stuff out.
 Plug 'tpope/vim-abolish'                " quickly switch myCammelCase to MY_CAMMEL_CASE etc
 Plug 'neomake/neomake'                  " Syntax linter (NeoVim)
-Plug 'meonlol/vim-subvenient'           " TODO
 Plug 'ludovicchabant/vim-gutentags'     " Tags handling
 Plug 'vim-scripts/taglist.vim'          " tags overview window :TlistToggle
 Plug 'editorconfig/editorconfig-vim'    " Support for reading config from .editorconfig file

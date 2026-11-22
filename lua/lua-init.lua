@@ -346,12 +346,21 @@ if snacksOk then
   })
 end
 
+-- set in vimrc
+local tabnineAvailable = vim.g.tabnine_available == 1
+
 local opencodeOk, opencode = pcall(require, "opencode")
 if opencodeOk then
   vim.g.opencode_opts = {
     server = {
       start = function()
-        vim.cmd("rightbelow vsplit term://opencode --port | wincmd p")
+        if tabnineAvailable then
+          -- TabNine uses OpenCode v1, which expects the server to be started with --port
+          vim.cmd("rightbelow vsplit term://opencode --port | wincmd p")
+        else
+          -- OpenCode v2: no --port; the TUI connects to the shared background service
+          vim.cmd("rightbelow vsplit term://opencode | wincmd p")
+        end
       end,
     },
   }
@@ -359,7 +368,13 @@ if opencodeOk then
   -- required for reloading buffers edited by opencode
   vim.o.autoread = true
 
-  vim.keymap.set({ "n", "x" }, "<leader>oa", function() opencode.ask("@this: ", { submit = true }) end)
+  vim.keymap.set({ "n", "x" }, "<leader>oa", function()
+    if tabnineAvailable then
+      opencode.ask("@this: ", { submit = true })
+    else
+      opencode.ask("@this: ")
+    end
+  end)
   vim.keymap.set({ "n", "x" }, "<leader>os", function() opencode.select() end)
   vim.keymap.set({ "n", "x" }, "<leader>op", function() opencode.prompt("@this") end)
 end

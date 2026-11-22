@@ -60,10 +60,17 @@ Plug 'stevearc/aerial.nvim'               " code outline window using lsp
 Plug 'ThePrimeagen/harpoon', { 'branch': 'harpoon2' }               " Saving favorite files in a separate menu
 Plug 'pechorin/any-jump.vim'              " quickly navigate using rg or ag
 
+" TabNine relies on the older OpenCode v1 plugin and its --port command.
+let g:tabnine_available = executable('tabnine') == 1
+
 if has("nvim")
   Plug 'sotte/presenting.nvim'            " presentations in vim
   Plug 'folke/snacks.nvim'                " dependency for opencode.nvim (input, picker)
-  Plug 'nickjvandyke/opencode.nvim', { 'tag': 'v1.0.2' }      " integration with the opencode AI agent
+  if g:tabnine_available
+    Plug 'nickjvandyke/opencode.nvim', { 'tag': 'v1.0.2' }  " OpenCode v1 integration used by TabNine
+  else
+    Plug 'nickjvandyke/opencode.nvim'     " integration with the opencode AI agent (main = OpenCode v2)
+  endif
 endif
 
 
@@ -605,7 +612,11 @@ endfu
 
 command! JiraCreate call JiraCreate()
 
-command! Ai term! bash --init-file <(echo '. $HOME/.bashrc; opencode --port')
+if g:tabnine_available
+  command! Ai term! bash --init-file <(echo '. $HOME/.bashrc; opencode --port')
+else
+  command! Ai term! bash --init-file <(echo '. $HOME/.bashrc; opencode')
+endif
 
 augroup filetypedetect
   au BufNewFile,BufRead *.jira			setf jira

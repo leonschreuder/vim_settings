@@ -612,11 +612,13 @@ endfu
 
 command! JiraCreate call JiraCreate()
 
-if g:tabnine_available
-  command! Ai term! bash --init-file <(echo '. $HOME/.bashrc; opencode --port')
-else
-  command! Ai term! bash --init-file <(echo '. $HOME/.bashrc; opencode')
-endif
+command! Ai call s:OpenAiInTerminal()
+
+function! s:OpenAiInTerminal()
+  let l:openCodeCommand = g:tabnine_available ? 'opencode --port' : 'opencode'
+  execute "term! bash --init-file <(echo '. $HOME/.bashrc; " . l:openCodeCommand . "')"
+  silent! lua OpencodeTermMappings()
+endfunction
 
 augroup filetypedetect
   au BufNewFile,BufRead *.jira			setf jira

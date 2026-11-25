@@ -376,7 +376,22 @@ if opencodeOk then
     end
   end)
   vim.keymap.set({ "n", "x" }, "<leader>os", function() opencode.select() end)
+  vim.keymap.set({ "n", "x" }, "<leader>oo", function() return opencode.operator("@this ") end,         { desc = "Append range to OpenCode", expr = true })
   vim.keymap.set({ "n", "x" }, "<leader>op", function() opencode.prompt("@this") end)
+
+  -- the opencode TUI doesn't use the terminal scrollback, so scroll it via the plugin
+  function _G.OpencodeTermMappings(buf)
+    buf = buf or vim.api.nvim_get_current_buf()
+    local maps = {
+      ["<C-u>"] = "session.half.page.up",
+      ["<C-d>"] = "session.half.page.down",
+      ["<C-b>"] = "session.page.up",
+      ["<C-f>"] = "session.page.down",
+    }
+    for lhs, cmd in pairs(maps) do
+      vim.keymap.set("n", lhs, function() opencode.command(cmd) end, { buffer = buf, desc = "OpenCode " .. cmd })
+    end
+  end
 end
 
 -- }}}
